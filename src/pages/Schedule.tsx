@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { Clock, MapPin, Users, Sparkles, Award, Mic2, Coffee, Star } from "lucide-react";
+import { Clock, MapPin, Users, Sparkles, Award, Mic2, Coffee, Star, Search, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 type DayKey = "wednesday" | "thursday" | "friday" | "saturday";
 
@@ -68,37 +69,53 @@ const scheduleData: ScheduleData = {
   },
 };
 
-const breakoutSessions = [
-  { speaker: "Jason Asa", topic: "Advanced Listing Strategies With Strategic Communication" },
-  { speaker: "David Lewis", topic: "Don't Be A Secret Agent" },
-  { speaker: "Kyle Draper", topic: "AI Training for the Market Boom" },
-  { speaker: "Tania Bobe", topic: "AI Keeps Me Organized" },
-  { speaker: "Jennifer Gomez", topic: "How to Break Into Higher Priced Listings" },
-  { speaker: "Mary Miner", topic: "Using AI to Build Relationships" },
-  { speaker: "Kathy Courtney", topic: "Anyone Can Increase Their Price Point" },
-  { speaker: "Gerard Perillo", topic: "In Person Influencer - How to Be Remembered" },
-  { speaker: "Austin Hellickson", topic: "Know Your Client, Win the Deal" },
-  { speaker: "Aria Salehpour", topic: "Using Personality to Position Yourself" },
-  { speaker: "Scott Jacobs", topic: "Becoming A Person of Influence" },
-  { speaker: "Shannon Bagdonas", topic: "Build Local Relationships to Drive Influence" },
-  { speaker: "Long Doan", topic: "How to Influence People" },
-  { speaker: "Amanda Cook", topic: "Coffee Dates That Convert" },
-  { speaker: "Alex Rivlin", topic: "5x Your Prospecting Results" },
-  { speaker: "Bobby Moats", topic: "The AI Enabled Agent" },
-  { speaker: "Samantha Boyd", topic: "A Day in the Life Using AI" },
-  { speaker: "Tony Tate", topic: "Becoming A Person Of Influence" },
-  { speaker: "Max Shein", topic: "Gain Clarity to Build Influencer" },
-  { speaker: "Jason Prieto", topic: "The 90 Day Cash Sprint" },
-  { speaker: "Alan Murray", topic: "Master Your Money with AI" },
-  { speaker: "David Kurz", topic: "Real World Buzz" },
-  { speaker: "Justin Rossi", topic: "LPT's Marketing Helps You Step Up" },
-  { speaker: "Shonna Ruble", topic: "Use AI to Win Listings" },
-  { speaker: "Blair Knowles", topic: "Beyond Google: Winning at AI Search" },
-  { speaker: "Sam Khorramian", topic: "Going Viral with Your Database" },
-  { speaker: "Chanel Hart D'Aprix", topic: "How to Step Up Your Price Point" },
-  { speaker: "Sharra Mercer", topic: "Step Up Your Price Point with New Construction Sales" },
-  { speaker: "Marissa Canario", topic: "Turn Your Database into Dollars: The Influence Formula" },
+type SessionCategory = "all" | "ai" | "influence" | "listings" | "marketing";
+
+interface BreakoutSession {
+  speaker: string;
+  topic: string;
+  category: SessionCategory;
+}
+
+const breakoutSessions: BreakoutSession[] = [
+  { speaker: "Jason Asa", topic: "Advanced Listing Strategies With Strategic Communication", category: "listings" },
+  { speaker: "David Lewis", topic: "Don't Be A Secret Agent", category: "marketing" },
+  { speaker: "Kyle Draper", topic: "AI Training for the Market Boom", category: "ai" },
+  { speaker: "Tania Bobe", topic: "AI Keeps Me Organized", category: "ai" },
+  { speaker: "Jennifer Gomez", topic: "How to Break Into Higher Priced Listings", category: "listings" },
+  { speaker: "Mary Miner", topic: "Using AI to Build Relationships", category: "ai" },
+  { speaker: "Kathy Courtney", topic: "Anyone Can Increase Their Price Point", category: "listings" },
+  { speaker: "Gerard Perillo", topic: "In Person Influencer - How to Be Remembered", category: "influence" },
+  { speaker: "Austin Hellickson", topic: "Know Your Client, Win the Deal", category: "listings" },
+  { speaker: "Aria Salehpour", topic: "Using Personality to Position Yourself", category: "influence" },
+  { speaker: "Scott Jacobs", topic: "Becoming A Person of Influence", category: "influence" },
+  { speaker: "Shannon Bagdonas", topic: "Build Local Relationships to Drive Influence", category: "influence" },
+  { speaker: "Long Doan", topic: "How to Influence People", category: "influence" },
+  { speaker: "Amanda Cook", topic: "Coffee Dates That Convert", category: "marketing" },
+  { speaker: "Alex Rivlin", topic: "5x Your Prospecting Results", category: "marketing" },
+  { speaker: "Bobby Moats", topic: "The AI Enabled Agent", category: "ai" },
+  { speaker: "Samantha Boyd", topic: "A Day in the Life Using AI", category: "ai" },
+  { speaker: "Tony Tate", topic: "Becoming A Person Of Influence", category: "influence" },
+  { speaker: "Max Shein", topic: "Gain Clarity to Build Influencer", category: "influence" },
+  { speaker: "Jason Prieto", topic: "The 90 Day Cash Sprint", category: "marketing" },
+  { speaker: "Alan Murray", topic: "Master Your Money with AI", category: "ai" },
+  { speaker: "David Kurz", topic: "Real World Buzz", category: "marketing" },
+  { speaker: "Justin Rossi", topic: "LPT's Marketing Helps You Step Up", category: "marketing" },
+  { speaker: "Shonna Ruble", topic: "Use AI to Win Listings", category: "ai" },
+  { speaker: "Blair Knowles", topic: "Beyond Google: Winning at AI Search", category: "ai" },
+  { speaker: "Sam Khorramian", topic: "Going Viral with Your Database", category: "marketing" },
+  { speaker: "Chanel Hart D'Aprix", topic: "How to Step Up Your Price Point", category: "listings" },
+  { speaker: "Sharra Mercer", topic: "Step Up Your Price Point with New Construction Sales", category: "listings" },
+  { speaker: "Marissa Canario", topic: "Turn Your Database into Dollars: The Influence Formula", category: "influence" },
 ];
+
+const categoryLabels: Record<SessionCategory, string> = {
+  all: "All Sessions",
+  ai: "AI & Technology",
+  influence: "Influence & Relationships",
+  listings: "Listings & Price Point",
+  marketing: "Marketing & Prospecting",
+};
 
 const getEventIcon = (type: string) => {
   switch (type) {
@@ -124,6 +141,8 @@ const getEventColor = (type: string) => {
 
 const SchedulePage = () => {
   const [activeDay, setActiveDay] = useState<DayKey>("wednesday");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<SessionCategory>("all");
 
   const days: { key: DayKey; label: string }[] = [
     { key: "wednesday", label: "Wed" },
@@ -131,6 +150,20 @@ const SchedulePage = () => {
     { key: "friday", label: "Fri" },
     { key: "saturday", label: "Sat" },
   ];
+
+  const filteredSessions = useMemo(() => {
+    return breakoutSessions.filter((session) => {
+      const matchesSearch = 
+        searchQuery === "" ||
+        session.speaker.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        session.topic.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = 
+        activeCategory === "all" || session.category === activeCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, activeCategory]);
 
   return (
     <main className="min-h-screen bg-background">
@@ -288,25 +321,107 @@ const SchedulePage = () => {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {breakoutSessions.map((session, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.03 }}
-                className="glass-card p-4 hover:border-primary/50 transition-colors"
-              >
-                <h3 className="font-semibold text-foreground text-sm">
-                  {session.speaker}
-                </h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {session.topic}
-                </p>
-              </motion.div>
-            ))}
+          {/* Search and Filter */}
+          <div className="mb-8 space-y-4">
+            {/* Search Input */}
+            <div className="relative max-w-md mx-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by speaker or topic..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-10 bg-background/50 border-border/50 focus:border-primary"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Filters */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {(Object.keys(categoryLabels) as SessionCategory[]).map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus-ring ${
+                    activeCategory === category
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card text-muted-foreground hover:text-foreground hover:bg-card/80 border border-border/50"
+                  }`}
+                >
+                  {categoryLabels[category]}
+                </button>
+              ))}
+            </div>
+
+            {/* Results Count */}
+            <p className="text-center text-sm text-muted-foreground">
+              Showing {filteredSessions.length} of {breakoutSessions.length} sessions
+            </p>
           </div>
+
+          <AnimatePresence mode="popLayout">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredSessions.length > 0 ? (
+                filteredSessions.map((session, index) => (
+                  <motion.div
+                    key={`${session.speaker}-${session.topic}`}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: index * 0.02 }}
+                    layout
+                    className="glass-card p-4 hover:border-primary/50 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h3 className="font-semibold text-foreground text-sm">
+                          {session.speaker}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {session.topic}
+                        </p>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${
+                        session.category === "ai" ? "bg-blue-400/20 text-blue-400" :
+                        session.category === "influence" ? "bg-purple-400/20 text-purple-400" :
+                        session.category === "listings" ? "bg-primary/20 text-primary" :
+                        "bg-orange-400/20 text-orange-400"
+                      }`}>
+                        {categoryLabels[session.category].split(" ")[0]}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="col-span-full text-center py-12"
+                >
+                  <p className="text-muted-foreground">
+                    No sessions found matching your criteria.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setActiveCategory("all");
+                    }}
+                    className="mt-4 text-primary hover:underline text-sm"
+                  >
+                    Clear filters
+                  </button>
+                </motion.div>
+              )}
+            </div>
+          </AnimatePresence>
         </div>
       </section>
 
