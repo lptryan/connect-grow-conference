@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { MapPin, Phone, Globe, Star, Car, Plane, ExternalLink, Wifi, Coffee, Dumbbell, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import venueMap from "@/assets/venue-map.png";
 
 const hotels = [
   {
@@ -165,20 +166,18 @@ const Venue = () => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              {/* Map Embed */}
+              {/* Venue Map Image */}
               <div className="rounded-2xl overflow-hidden border border-border/50 shadow-xl">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.8!2d-81.4525!3d28.4285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e77ed5a5555555%3A0x1234567890abcdef!2sHilton%20Orlando!5e0!3m2!1sen!2sus!4v1234567890"
-                  width="100%"
-                  height="400"
-                  style={{ border: 0 }}
-                  allowFullScreen
+                <img
+                  src={venueMap}
+                  alt="AIU Fall Conference Venue Map"
+                  className="w-full h-auto"
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Hilton Orlando Location"
-                  className="w-full"
                 />
               </div>
+              <p className="text-sm text-muted-foreground text-center mt-4">
+                Conference venue layout and surrounding area
+              </p>
             </motion.div>
           </div>
         </div>
