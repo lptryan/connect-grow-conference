@@ -159,7 +159,7 @@ const SchedulePage = () => {
       </section>
 
       {/* Day Selector */}
-      <section className="sticky top-16 md:top-20 z-40 bg-background/95 backdrop-blur-lg border-b border-border/50 py-4">
+      <section className="sticky top-16 md:top-20 z-40 bg-background/65 backdrop-blur-lg border-b border-border/40 py-4">
         <div className="container">
           <div className="flex items-center justify-center gap-2 md:gap-4">
             {days.map((day) => (
