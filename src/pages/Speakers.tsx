@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { Linkedin, Twitter, Globe, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -440,6 +441,7 @@ const Speakers = () => {
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
+      <StickyMobileCTA />
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-primary/10 to-background">

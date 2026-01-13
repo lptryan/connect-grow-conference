@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { Clock, MapPin, Users, Sparkles, Award, Mic2, Coffee, Star } from "lucide-react";
 
 type DayKey = "wednesday" | "thursday" | "friday" | "saturday";
@@ -134,6 +135,7 @@ const SchedulePage = () => {
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
+      <StickyMobileCTA />
       
       {/* Hero */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-primary/10 to-background">
