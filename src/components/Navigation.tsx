@@ -12,7 +12,11 @@ const navItems = [
   { label: "FAQ", href: "/#faq" },
 ];
 
-export const Navigation = () => {
+interface NavigationProps {
+  bannerVisible?: boolean;
+}
+
+export const Navigation = ({ bannerVisible = false }: NavigationProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -61,11 +65,12 @@ export const Navigation = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
             ? "bg-background/95 backdrop-blur-lg border-b border-border/50"
             : "bg-transparent"
         }`}
+        style={{ top: bannerVisible ? '40px' : '0px' }}
       >
         <div className="container">
           <nav className="flex items-center justify-between h-16 md:h-20">

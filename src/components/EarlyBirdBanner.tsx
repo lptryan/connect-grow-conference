@@ -5,7 +5,11 @@ import { Clock, X } from "lucide-react";
 // Early bird deadline - 30 days before conference
 const EARLY_BIRD_DEADLINE = new Date("2026-09-15T23:59:59-04:00");
 
-export const EarlyBirdBanner = () => {
+interface EarlyBirdBannerProps {
+  onVisibilityChange?: (visible: boolean) => void;
+}
+
+export const EarlyBirdBanner = ({ onVisibilityChange }: EarlyBirdBannerProps) => {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [isVisible, setIsVisible] = useState(true);
 
@@ -33,6 +37,11 @@ export const EarlyBirdBanner = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const visible = isVisible && !timeLeft.expired;
+    onVisibilityChange?.(visible);
+  }, [isVisible, timeLeft.expired, onVisibilityChange]);
 
   if (!isVisible || timeLeft.expired) return null;
 
@@ -85,3 +94,5 @@ export const EarlyBirdBanner = () => {
     </motion.div>
   );
 };
+
+export const BANNER_HEIGHT = 40; // approximate height in pixels
