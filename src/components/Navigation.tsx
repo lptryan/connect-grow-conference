@@ -4,22 +4,41 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Calendar, MapPin } from "lucide-react";
 
 const navItems = [
-  { label: "Event Highlights", href: "/#highlights" },
+  { label: "Highlights", href: "/#highlights" },
   { label: "Certifications", href: "/#certifications" },
   { label: "Schedule", href: "/schedule" },
   { label: "Speakers", href: "/speakers" },
   { label: "Venue", href: "/venue" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      
+      // Detect active section
+      const sections = ["highlights", "certifications", "faq"];
+      let currentSection = "";
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            currentSection = section;
+            break;
+          }
+        }
+      }
+      setActiveSection(currentSection);
     };
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -68,17 +87,34 @@ export const Navigation = () => {
 
             {/* Desktop Navigation */}
             <ul className="hidden lg:flex items-center gap-8">
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    to={item.href}
-                    onClick={() => handleNavClick(item.href)}
-                    className="nav-link text-sm font-medium focus-ring rounded-md px-2 py-1"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map((item) => {
+                const sectionId = item.href.startsWith("/#") ? item.href.slice(2) : "";
+                const isActive = sectionId 
+                  ? activeSection === sectionId 
+                  : location.pathname === item.href;
+                
+                return (
+                  <li key={item.label}>
+                    <Link
+                      to={item.href}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`relative text-sm font-medium focus-ring rounded-md px-2 py-1 transition-colors ${
+                        isActive 
+                          ? "text-primary" 
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {item.label}
+                      {isActive && (
+                        <motion.span
+                          layoutId="activeIndicator"
+                          className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                        />
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
 
             {/* CTA + Mobile Toggle */}
@@ -87,7 +123,7 @@ export const Navigation = () => {
                 href="https://lptrealtyevents.ticketspice.com/annual-ascend-conference-2025"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-ring"
+                className="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-foreground hover:bg-accent/90 transition-colors focus-ring animate-glow-pulse"
               >
                 Get Tickets
               </a>

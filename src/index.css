@@ -319,6 +319,19 @@
   }
 }
 
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px hsl(var(--accent) / 0.4), 0 0 30px hsl(var(--accent) / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px hsl(var(--accent) / 0.6), 0 0 50px hsl(var(--accent) / 0.3), 0 0 80px hsl(var(--accent) / 0.15);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;

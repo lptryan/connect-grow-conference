@@ -108,7 +108,7 @@ export const HeroSection = () => {
               href="https://lptrealtyevents.ticketspice.com/annual-ascend-conference-2025"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-hero group"
+              className="btn-hero group animate-glow-pulse"
             >
               Get Tickets — $1,399
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

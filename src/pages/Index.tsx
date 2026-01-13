@@ -1,4 +1,6 @@
 import { Navigation } from "@/components/Navigation";
+import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { HeroSection } from "@/components/HeroSection";
 import { VideoHighlightsSection } from "@/components/VideoHighlightsSection";
 import { CertificationsSection } from "@/components/CertificationsSection";
@@ -16,6 +18,8 @@ import { SocialProofSection } from "@/components/SocialProofSection";
 const Index = () => {
   return (
     <main className="min-h-screen bg-background">
+      <ScrollProgress />
+      <EarlyBirdBanner />
       <Navigation />
       <HeroSection />
       <StatsSection />

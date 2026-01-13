@@ -20,7 +20,7 @@ export const VideoHighlightsSection = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <span className="text-sm font-semibold text-primary uppercase tracking-widest mb-4 block">
-              Event Highlights
+              Highlights
             </span>
             <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-6">
               Experience the Energy
