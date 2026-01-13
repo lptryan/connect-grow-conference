@@ -467,7 +467,7 @@ const Speakers = () => {
       </section>
 
       {/* Filter Section */}
-      <section className="py-8 border-b border-border/50 sticky top-16 md:top-20 bg-background/95 backdrop-blur-lg z-40">
+      <section className="py-8 border-b border-border/40 sticky top-16 md:top-20 bg-background/65 backdrop-blur-lg z-40">
         <div className="container">
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Filter className="w-5 h-5 text-muted-foreground mr-2" />
