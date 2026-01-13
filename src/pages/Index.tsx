@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -16,11 +17,13 @@ import { NewsletterSection } from "@/components/NewsletterSection";
 import { SocialProofSection } from "@/components/SocialProofSection";
 
 const Index = () => {
+  const [bannerVisible, setBannerVisible] = useState(true);
+
   return (
     <main className="min-h-screen bg-background">
       <ScrollProgress />
-      <EarlyBirdBanner />
-      <Navigation />
+      <EarlyBirdBanner onVisibilityChange={setBannerVisible} />
+      <Navigation bannerVisible={bannerVisible} />
       <HeroSection />
       <StatsSection />
       <SocialProofSection />
