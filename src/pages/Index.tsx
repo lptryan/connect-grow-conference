@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { HeroSection } from "@/components/HeroSection";
 import { VideoHighlightsSection } from "@/components/VideoHighlightsSection";
 import { CertificationsSection } from "@/components/CertificationsSection";
@@ -24,6 +25,7 @@ const Index = () => {
       <ScrollProgress />
       <EarlyBirdBanner onVisibilityChange={setBannerVisible} />
       <Navigation bannerVisible={bannerVisible} />
+      <StickyMobileCTA />
       <HeroSection />
       <StatsSection />
       <SocialProofSection />
