@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BackToTop } from "@/components/BackToTop";
+import { SkipLink } from "@/components/SkipLink";
 import Index from "./pages/Index";
 import Schedule from "./pages/Schedule";
 import Speakers from "./pages/Speakers";
@@ -53,8 +54,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <SkipLink />
         <BackToTop />
-        <AnimatedRoutes />
+        <div id="main-content" tabIndex={-1} className="outline-none">
+          <AnimatedRoutes />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
