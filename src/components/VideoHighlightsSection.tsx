@@ -31,33 +31,24 @@ export const VideoHighlightsSection = () => {
             <div className="section-divider mt-8" />
           </div>
 
-          {/* Video Container */}
+          {/* Video Container - Embedded YouTube */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative rounded-2xl overflow-hidden bg-card border border-border/30"
+            className="relative rounded-2xl overflow-hidden bg-card border border-border/30 shadow-2xl"
           >
-            {/* Video Placeholder - Replace with actual video embed */}
-            <div className="relative aspect-video bg-gradient-to-br from-primary/20 via-background to-accent/20 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOCAxOC04LjA1OSAxOC0xOC04LjA1OS0xOC0xOC0xOHoiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+')] opacity-30" />
-              
-              {/* Play Button */}
-              <a
-                href="https://www.instagram.com/lptrealty/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative z-10 group"
-              >
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-accent flex items-center justify-center shadow-glow-yellow group-hover:scale-110 transition-transform duration-300">
-                  <Play className="w-8 h-8 md:w-10 md:h-10 text-accent-foreground ml-1" />
-                </div>
-                <span className="block mt-4 text-foreground font-medium">
-                  Watch on Instagram
-                </span>
-              </a>
+            <div className="relative aspect-video">
+              <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1"
+                title="AIU Fall Conference Highlights"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+                loading="lazy"
+              />
             </div>
-
+            
             {/* Decorative gradient overlay */}
             <div className="absolute inset-0 pointer-events-none border-2 border-primary/20 rounded-2xl" />
           </motion.div>
