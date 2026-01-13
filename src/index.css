@@ -223,9 +223,15 @@
 }
 
 @layer utilities {
-  /* Focus states - WCAG AA compliant */
+  /* Enhanced Focus states - WCAG AA compliant with high visibility */
   .focus-ring {
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  
+  /* Skip to main content link for keyboard users */
+  .skip-link {
+    @apply absolute -top-10 left-4 z-[100] px-4 py-2 bg-primary text-primary-foreground rounded-md font-medium;
+    @apply focus:top-4 transition-all;
   }
   
   /* Animation utilities */
@@ -253,6 +259,11 @@
     animation: pulseGlow 2s ease-in-out infinite;
   }
   
+  /* Shimmer animation for skeletons */
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
   /* Stagger children animation */
   .stagger-children > * {
     opacity: 0;
@@ -265,6 +276,15 @@
   .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
   .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
   .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fadeUp {
