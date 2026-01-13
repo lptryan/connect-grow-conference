@@ -10,6 +10,8 @@ import { SponsorsSection } from "@/components/SponsorsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
+import { NewsletterSection } from "@/components/NewsletterSection";
+import { SocialProofSection } from "@/components/SocialProofSection";
 
 const Index = () => {
   return (
@@ -17,11 +19,13 @@ const Index = () => {
       <Navigation />
       <HeroSection />
       <StatsSection />
+      <SocialProofSection />
       <VideoHighlightsSection />
       <CertificationsSection />
       <SpeakersSection />
       <WhyThisMattersSection />
       <TestimonialsSection />
+      <NewsletterSection />
       <FAQSection />
       <SponsorsSection />
       <CTASection />
