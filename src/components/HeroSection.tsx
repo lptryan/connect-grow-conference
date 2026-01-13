@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import { Calendar, MapPin, ArrowRight, Play } from "lucide-react";
 import heroImage from "@/assets/hero-conference.jpg";
+import { CountdownTimer } from "./CountdownTimer";
+
+// Conference date: October 15, 2026
+const CONFERENCE_DATE = new Date("2026-10-15T09:00:00-04:00");
 
 export const HeroSection = () => {
   return (
@@ -42,7 +46,7 @@ export const HeroSection = () => {
           >
             AIU <span className="gradient-text-blue">Fall Conference</span>
             <br />
-            <span className="text-3xl md:text-5xl lg:text-6xl">2025</span>
+            <span className="text-3xl md:text-5xl lg:text-6xl">2026</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -84,9 +88,18 @@ export const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* CTAs */}
+          {/* Countdown Timer */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="mb-10"
+          >
+            <CountdownTimer targetDate={CONFERENCE_DATE} />
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"

@@ -7,8 +7,8 @@ const navItems = [
   { label: "Event Highlights", href: "/#highlights" },
   { label: "Certifications", href: "/#certifications" },
   { label: "Schedule", href: "/schedule" },
-  { label: "Speakers", href: "/#speakers" },
-  { label: "Testimonials", href: "/#testimonials" },
+  { label: "Speakers", href: "/speakers" },
+  { label: "Venue", href: "/venue" },
 ];
 
 export const Navigation = () => {
