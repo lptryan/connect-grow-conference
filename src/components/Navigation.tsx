@@ -65,11 +65,7 @@ export const Navigation = ({ bannerVisible = false }: NavigationProps) => {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-background/65 backdrop-blur-lg border-b border-border/50"
-            : "bg-transparent"
-        }`}
+        className="fixed left-0 right-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-lg border-b border-border/40"
         style={{ top: bannerVisible ? '40px' : '0px' }}
       >
         <div className="container">
