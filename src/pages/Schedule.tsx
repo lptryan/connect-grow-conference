@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -143,6 +143,9 @@ const SchedulePage = () => {
   const [activeDay, setActiveDay] = useState<DayKey>("wednesday");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<SessionCategory>("all");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<{ [key in DayKey]?: HTMLElement }>({});
+  const isScrollingRef = useRef(false);
 
   const days: { key: DayKey; label: string }[] = [
     { key: "wednesday", label: "Wed" },
@@ -150,6 +153,47 @@ const SchedulePage = () => {
     { key: "friday", label: "Fri" },
     { key: "saturday", label: "Sat" },
   ];
+
+  const scrollToDay = useCallback((day: DayKey) => {
+    const section = sectionRefs.current[day];
+    if (section) {
+      isScrollingRef.current = true;
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 800);
+    }
+  }, []);
+
+  const handleDayClick = (day: DayKey) => {
+    setActiveDay(day);
+    scrollToDay(day);
+  };
+
+  // Update active day based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isScrollingRef.current) return;
+
+      const scrollPosition = window.scrollY + 200; // Offset for sticky header
+
+      for (const day of days) {
+        const section = sectionRefs.current[day.key];
+        if (section) {
+          const { offsetTop, offsetHeight } = section;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            if (activeDay !== day.key) {
+              setActiveDay(day.key);
+            }
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeDay, days]);
 
   const filteredSessions = useMemo(() => {
     return breakoutSessions.filter((session) => {
@@ -198,7 +242,7 @@ const SchedulePage = () => {
             {days.map((day) => (
               <button
                 key={day.key}
-                onClick={() => setActiveDay(day.key)}
+                onClick={() => handleDayClick(day.key)}
                 className={`relative px-4 md:px-8 py-3 rounded-full font-medium text-sm md:text-base transition-all duration-300 focus-ring ${
                   activeDay === day.key
                     ? "bg-primary text-primary-foreground"
@@ -220,89 +264,96 @@ const SchedulePage = () => {
         </div>
       </section>
 
-      {/* Schedule Content */}
-      <section className="py-12 md:py-20">
-        <div className="container max-w-4xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeDay}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Day Header */}
-              <div className="text-center mb-12">
-                <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground capitalize">
-                  {activeDay}
-                </h2>
-                <p className="text-lg text-primary font-medium">
-                  {scheduleData[activeDay].date}
-                </p>
-              </div>
+      {/* Schedule Content - All Days with Scroll Snapping */}
+      <div ref={scrollContainerRef} className="scroll-smooth">
+        {days.map((day) => (
+          <section 
+            key={day.key}
+            ref={(el) => { if (el) sectionRefs.current[day.key] = el; }}
+            id={`schedule-${day.key}`}
+            className="py-12 md:py-20 min-h-[50vh] scroll-mt-32 md:scroll-mt-36"
+          >
+            <div className="container max-w-4xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.4 }}
+              >
+                {/* Day Header */}
+                <div className="text-center mb-12">
+                  <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground capitalize">
+                    {day.key}
+                  </h2>
+                  <p className="text-lg text-primary font-medium">
+                    {scheduleData[day.key].date}
+                  </p>
+                </div>
 
-              {/* Events Timeline */}
-              <div className="space-y-4">
-                {scheduleData[activeDay].events.map((event, index) => {
-                  const Icon = getEventIcon(event.type);
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="schedule-card group"
-                    >
-                      <div className="flex flex-col md:flex-row md:items-center gap-4">
-                        {/* Time */}
-                        <div className="md:w-40 flex-shrink-0">
-                          <div className="flex items-center gap-2 text-primary font-medium">
-                            <Clock className="w-4 h-4" />
-                            <span className="text-sm">{event.time}</span>
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-grow">
-                          <div className="flex items-start gap-3">
-                            <div className={`p-2 rounded-lg border ${getEventColor(event.type)} flex-shrink-0`}>
-                              <Icon className="w-4 h-4" />
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-display font-bold text-foreground group-hover:text-primary transition-colors">
-                                {event.title}
-                              </h3>
-                              {event.location && (
-                                <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                                  <MapPin className="w-3 h-3" />
-                                  {event.location}
-                                </div>
-                              )}
-                              {event.description && (
-                                <p className="text-sm text-muted-foreground mt-2">
-                                  {event.description}
-                                </p>
-                              )}
-                              {event.certification && (
-                                <div className="mt-2">
-                                  <span className="certification-badge text-xs">
-                                    <Award className="w-3 h-3" />
-                                    {event.certification} Certification
-                                  </span>
-                                </div>
-                              )}
+                {/* Events Timeline */}
+                <div className="space-y-4">
+                  {scheduleData[day.key].events.map((event, index) => {
+                    const Icon = getEventIcon(event.type);
+                    return (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.05 }}
+                        className="schedule-card group"
+                      >
+                        <div className="flex flex-col md:flex-row md:items-center gap-4">
+                          {/* Time */}
+                          <div className="md:w-40 flex-shrink-0">
+                            <div className="flex items-center gap-2 text-primary font-medium">
+                              <Clock className="w-4 h-4" />
+                              <span className="text-sm">{event.time}</span>
                             </div>
                           </div>
+
+                          {/* Content */}
+                          <div className="flex-grow">
+                            <div className="flex items-start gap-3">
+                              <div className={`p-2 rounded-lg border ${getEventColor(event.type)} flex-shrink-0`}>
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-display font-bold text-foreground group-hover:text-primary transition-colors">
+                                  {event.title}
+                                </h3>
+                                {event.location && (
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                                    <MapPin className="w-3 h-3" />
+                                    {event.location}
+                                  </div>
+                                )}
+                                {event.description && (
+                                  <p className="text-sm text-muted-foreground mt-2">
+                                    {event.description}
+                                  </p>
+                                )}
+                                {event.certification && (
+                                  <div className="mt-2">
+                                    <span className="certification-badge text-xs">
+                                      <Award className="w-3 h-3" />
+                                      {event.certification} Certification
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        ))}
+      </div>
 
       {/* Breakout Sessions */}
       <section className="py-16 md:py-24 bg-card/30">
