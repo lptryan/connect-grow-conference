@@ -150,6 +150,7 @@ export const Navigation = ({ bannerVisible = false }: NavigationProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="mobile-nav-overlay"
+            style={{ top: bannerVisible ? '40px' : '0px' }}
           >
             <div className="container h-full flex flex-col">
               {/* Mobile Header */}
